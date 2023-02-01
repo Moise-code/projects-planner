@@ -26,6 +26,7 @@ class ProjectList{
 projects = []
 
 constructor(type){ 
+  this.type = type;
 
   // now we are going to get the list of projects on both sides
   const projItems = document.querySelectorAll(`#${type}-projects li`);
@@ -35,6 +36,11 @@ constructor(type){
  })
  console.log(this.projects)
 
+}
+
+// create a switch handler method
+setSwitchHandlerFunction(switchHandlerFunction){
+  this.switchHandler = switchHandlerFunction;
 }
 
 // create method to add movie from the array of removed ones.
