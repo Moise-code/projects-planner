@@ -8,10 +8,17 @@ class ProjectItem{
 }
 // create class for projects of one box
 class ProjectList{
+// the initial array of project list in a particular box
+projects = []
+
 constructor(type){ 
   // now we are going to get the list of projects on both sides
   const projItems = document.querySelectorAll(`#${type}-projects li`);
-  console.log(projItems);
+ // now lets use for each to get ids in the projectItems
+ projItems.forEach((projId) =>{
+   this.projects.push(new ProjectItem(projId.id));
+ })
+ console.log(this.projects)
 
 }
 }
