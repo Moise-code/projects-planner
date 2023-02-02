@@ -12,7 +12,22 @@ class DOMHelper {
   }
 }
 
-class Tooltip {}
+class Tooltip {
+
+  detach = () => {
+ this.element.remove();
+  }
+  attach(){
+    const tooltipElement = document.createElement('div');
+    tooltipElement.textContent = 'Dummy';
+    tooltipElement.className ='card';
+    tooltipElement.addEventListener('click', this.detach);
+    this.element = tooltipElement;
+    document.body.append(tooltipElement)
+  }
+
+
+}
 
 class ProjectItem {
   constructor(id, updateProjectListsFunction, type) {
@@ -22,7 +37,18 @@ class ProjectItem {
     this.connectSwitchButton(type);
   }
 
-  connectMoreInfoButton() {}
+  // new method to show more information
+
+  showMoreInfoHandler(){
+    const tooltip = new Tooltip();
+    tooltip.attach();
+  }
+  connectMoreInfoButton() {
+    const projectItemElement = document.getElementById(this.id);
+    let moreInfoBtn = projectItemElement.querySelector('button:first-of-type');
+    moreInfoBtn.addEventListener('click',this.showMoreInfoHandler)
+    
+  }
 
   connectSwitchButton(type) {
     const projectItemElement = document.getElementById(this.id);
