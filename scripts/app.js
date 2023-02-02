@@ -13,23 +13,33 @@ class DOMHelper {
 }
 
 class Tooltip {
-
-  detach = () => {
- this.element.remove();
+  constructor(closeNotifierFunction) {
+    this.closeNotifier = closeNotifierFunction;
   }
-  attach(){
+
+  closeTooltip = () => {
+    this.detach();
+    this.closeNotifier();
+  };
+
+  detach() {
+    this.element.remove();
+    // this.element.parentElement.removeChild(this.element);
+  }
+
+  attach() {
     const tooltipElement = document.createElement('div');
-    tooltipElement.textContent = 'Dummy';
-    tooltipElement.className ='card';
-    tooltipElement.addEventListener('click', this.detach);
+    tooltipElement.className = 'card';
+    tooltipElement.textContent = 'DUMMY!';
+    tooltipElement.addEventListener('click', this.closeTooltip);
     this.element = tooltipElement;
-    document.body.append(tooltipElement)
+    document.body.append(tooltipElement);
   }
-
-
 }
 
 class ProjectItem {
+  hasActiveTooltip = false;
+
   constructor(id, updateProjectListsFunction, type) {
     this.id = id;
     this.updateProjectListsHandler = updateProjectListsFunction;
@@ -37,17 +47,23 @@ class ProjectItem {
     this.connectSwitchButton(type);
   }
 
-  // new method to show more information
-
-  showMoreInfoHandler(){
-    const tooltip = new Tooltip();
+  showMoreInfoHandler() {
+    if (this.hasActiveTooltip) {
+      return;
+    }
+    const tooltip = new Tooltip(() => {
+      this.hasActiveTooltip = false;
+    });
     tooltip.attach();
+    this.hasActiveTooltip = true;
   }
+
   connectMoreInfoButton() {
     const projectItemElement = document.getElementById(this.id);
-    let moreInfoBtn = projectItemElement.querySelector('button:first-of-type');
-    moreInfoBtn.addEventListener('click',this.showMoreInfoHandler)
-    
+    const moreInfoBtn = projectItemElement.querySelector(
+      'button:first-of-type'
+    );
+    moreInfoBtn.addEventListener('click', this.showMoreInfoHandler);
   }
 
   connectSwitchButton(type) {
