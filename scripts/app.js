@@ -45,9 +45,14 @@ addFinishedProject(){
 }
 
 // we are going to add a method to remove the project from the list once finished to the finished box
-removeFinishedProject(){
+removeFinishedProject(projectId){
   // we are going to use the filter method to only remain with the done project
-
+  // this can be done by using either filter method or splice
+  // const projectInde = this.projects.findIndex(p => p.id === projectId)
+  // this.projects.slice(projectInde, 1)
+  // however a shorter way is to use the filter method remember we want the filtered array
+  // to be stored again in the projects array
+  this.projects = this.projects.filter(p => p.id !== projectId);
 }
 
 }
