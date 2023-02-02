@@ -18,6 +18,7 @@ connectSwitchButton(){
 const projectItemElement = document.getElementById(this.id);
 // to get the add button
 const finishProjectBtn = projectItemElement.querySelector('button:last-of-type');
+finishProjectBtn.addEventListener('click', )
 }
 
 }
@@ -36,7 +37,16 @@ projItems.forEach((projItem) =>{
   this.projects.push(projId);
 })
 console.log(this.projects);
+}
+// add a method to receive the finished projects
 
+addFinishedProject(){
+
+}
+
+// we are going to add a method to remove the project from the list once finished to the finished box
+removeFinishedProject(){
+  // we are going to use the filter method to only remain with the done project
 
 }
 
