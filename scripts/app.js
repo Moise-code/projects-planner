@@ -1,78 +1,75 @@
-// create a tool tip class to display tool tip when click on info button
-class Tooltip {
-  
-}
-// create class for one single project item in the list.
-class ProjectItem{
-  // creating constuctor with id since it is the one one passed down there/.
-constructor(id, updateProjectListFunction ){
-  this.id = id;
-  this.updateProjectListHandler = updateProjectListFunction;
-  this.connectMoreInfoButton();
-  this.connectSwitchButton();
-}
-// in project item we are going to add eventListerners to the buttons
-connectMoreInfoButton(){
-
-}
-connectSwitchButton(){
-const projectItemElement = document.getElementById(this.id);
-// to get the add button
-const finishProjectBtn = projectItemElement.querySelector('button:last-of-type');
-finishProjectBtn.addEventListener('click',this.updateProjectListHandler )
+class DOMHelper {
+  static moveElement(elementId, newDestinationSelector) {
+    const element = document.getElementById(elementId);
+    const destinationElement = document.querySelector(newDestinationSelector);
+    destinationElement.append(element);
+  }
 }
 
-}
-// create class for projects of one box
-class ProjectList{
-// the initial array of project list in a particular box
-projects = []
-constructor(type){
-  this.type = type;
-// now we are going to get the list of items in the particular box
-//which is in the end the three projects in general
-const projItems = document.querySelectorAll(`#${type}-projects li`)
-// we are going to use for each project in the list of project to get the id
-projItems.forEach((projItem) =>{
-  // we are goin to get the id but from the class projectItem by instatiating it.
-  const projId = new ProjectItem(projItem.id,this.removeFinishedProject.bind(this));
-  this.projects.push(projId);
-})
-console.log(this.projects);
+class Tooltip {}
+
+class ProjectItem {
+  constructor(id, updateProjectListsFunction) {
+    this.id = id;
+    this.updateProjectListsHandler = updateProjectListsFunction;
+    this.connectMoreInfoButton();
+    this.connectSwitchButton();
+  }
+
+  connectMoreInfoButton() {}
+
+  connectSwitchButton() {
+    const projectItemElement = document.getElementById(this.id);
+    const switchBtn = projectItemElement.querySelector('button:last-of-type');
+    switchBtn.addEventListener(
+      'click',
+      this.updateProjectListsHandler.bind(null, this.id)
+    );
+  }
 }
 
-// add a new method to switch the process
-setSwitchHandlerFunction (switchHandlerFunction){
-  this.switchHandler = switchHandlerFunction;
+class ProjectList {
+  projects = [];
 
-}
-// add a method to receive the finished projects
+  constructor(type) {
+    this.type = type;
+    const prjItems = document.querySelectorAll(`#${type}-projects li`);
+    for (const prjItem of prjItems) {
+      this.projects.push(
+        new ProjectItem(prjItem.id, this.switchProject.bind(this))
+      );
+    }
+    console.log(this.projects);
+  }
 
-addFinishedProject(){
+  setSwitchHandlerFunction(switchHandlerFunction) {
+    this.switchHandler = switchHandlerFunction;
+  }
 
+  addProject(project) {
+    this.projects.push(project);
+    DOMHelper.moveElement(project.id, `#${this.type}-projects ul`);
+  }
+
+  switchProject(projectId) {
+    // const projectIndex = this.projects.findIndex(p => p.id === projectId);
+    // this.projects.splice(projectIndex, 1);
+    this.switchHandler(this.projects.find(p => p.id === projectId));
+    this.projects = this.projects.filter(p => p.id !== projectId);
+  }
 }
 
-// we are going to add a method to remove the project from the list once finished to the finished box
-removeFinishedProject(projectId){ 
-  // we are going to use the filter method to only remain with the done project
-  // this can be done by using either filter method or splice
-  // const projectInde = this.projects.findIndex(p => p.id === projectId)
-  // this.projects.slice(projectInde, 1)
-  // however a shorter way is to use the filter method remember we want the filtered array
-  // to be stored again in the projects array
-  this.switchHandler(this.projects.find(p => p.id === projectId))
-  this.projects = this.projects.filter(p => p.id !== projectId);
+class App {
+  static init() {
+    const activeProjectsList = new ProjectList('active');
+    const finishedProjectsList = new ProjectList('finished');
+    activeProjectsList.setSwitchHandlerFunction(
+      finishedProjectsList.addProject.bind(finishedProjectsList)
+    );
+    finishedProjectsList.setSwitchHandlerFunction(
+      activeProjectsList.addProject.bind(activeProjectsList)
+    );
+  }
 }
 
-}
-/// create class to manage the whole application overall.
-class App{
-static init(){
-const activeProjectList = new ProjectList('active')
-const finishedProjectList = new ProjectList('finished')
-activeProjectList.setSwitchHandlerFunction(finishedProjectList.addFinishedProject.bind(finishedProjectList));
-finishedProjectList.setSwitchHandlerFunction(activeProjectList.addFinishedProject.bind(activeProjectList));
- 
-}
-}
 App.init();
