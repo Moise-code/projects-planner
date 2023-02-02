@@ -7,7 +7,19 @@ class ProjectItem{
   // creating constuctor with id since it is the one one passed down there/.
 constructor(id){
   this.id = id;
+  this.connectMoreInfoButton();
+  this.connectSwitchButton();
 }
+// in project item we are going to add eventListerners to the buttons
+connectMoreInfoButton(){
+
+}
+connectSwitchButton(){
+const projectItemElement = document.getElementById(this.id);
+// to get the add button
+const finishProjectBtn = projectItemElement.querySelector('button:last-of-type');
+}
+
 }
 // create class for projects of one box
 class ProjectList{
@@ -22,8 +34,8 @@ projItems.forEach((projItem) =>{
   // we are goin to get the id but from the class projectItem by instatiating it.
   const projId = new ProjectItem(projItem.id);
   this.projects.push(projId);
-  console.log(projId);
 })
+console.log(this.projects);
 
 
 }
